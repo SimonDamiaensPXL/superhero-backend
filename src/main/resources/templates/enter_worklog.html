@@ -6,25 +6,39 @@
 </head>
 <body>
 <form method="post" th:action="@{/worklog/add_worklog}" th:object="${workLogRequest}">
-    <div>
+    <div id="inputForm">
         <label>Superhero Name:</label>
-        <input type="text" th:field="*{superheroName}" /><br><br>
-        <p th:if="${#fields.hasErrors('superheroName')}" th:errorclass="error" th:errors="*{superheroName}" />
+        <input type="text" th:field="*{superheroName}" />
+        <p th:if="${#fields.hasErrors('superheroName')}" th:errorclass="error" th:errors="*{superheroName}"></p>
         <label>Mission:</label>
         <select class="form-control" th:field="*{mission}">
             <option th:each="mission : ${missions}"
                     th:value="${mission.id}"
                     th:text="${mission.missionName}">
             </option>
-        </select><br><br>
-
+        </select>
+        <p th:if="${#fields.hasErrors('mission')}" th:errorclass="error" th:errors="*{mission}"></p>
         <label>Date:</label>
-        <input type="date" th:field="*{date}"><br><br>
+        <input type="date" th:field="*{date}">
+        <p th:if="${#fields.hasErrors('date')}" th:errorclass="error" th:errors="*{date}"></p>
 
         <label>Task:</label>
-        <input type="text" th:field="*{task}"><br><br>
+        <input type="text" th:field="*{task}">
+        <p th:if="${#fields.hasErrors('task')}" th:errorclass="error" th:errors="*{task}"></p>
+
     </div>
     <input type="submit"/>
 </form>
 </body>
+<style>
+    #inputForm {
+        display: flex;
+        flex-direction: column;
+        width: 20%;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
 </html>

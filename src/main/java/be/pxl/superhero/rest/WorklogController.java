@@ -2,6 +2,7 @@ package be.pxl.superhero.rest;
 
 import be.pxl.superhero.api.Mission.MissionDTO;
 import be.pxl.superhero.api.Worklog.WorklogRequest;
+import be.pxl.superhero.domain.Worklog;
 import be.pxl.superhero.service.MissionService;
 import be.pxl.superhero.service.WorklogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-
 @Controller
 @RequestMapping("/worklog")
 public class WorklogController {
@@ -28,7 +28,7 @@ public class WorklogController {
     }
 
     @GetMapping("/enter_worklog")
-    public String enterWorklog(Model model) {
+    public String enterWorklog(Model model, WorklogRequest worklogRequest) {
         List<MissionDTO> missions = missionService.findAllUncompletedMissions();
         model.addAttribute("missions", missions);
         model.addAttribute("workLogRequest", new WorklogRequest());
@@ -36,15 +36,18 @@ public class WorklogController {
     }
 
     @PostMapping("/add_worklog")
-    public String addWorklog(@ModelAttribute @Valid WorklogRequest workLogRequest, BindingResult result, Model model) {
+    public String addWorklog(@Valid @ModelAttribute("workLogRequest") WorklogRequest workLogRequest, BindingResult result, Model model) {
+        model.addAttribute("workLogRequest", workLogRequest);
         if (result.hasErrors())
         {
+            List<MissionDTO> missions = missionService.findAllUncompletedMissions();
+            model.addAttribute("missions", missions);
             return "enter_worklog";
         }
 
         worklogService.createWorklog(workLogRequest);
-        model.addAttribute("workLogRequest", workLogRequest);
         return "worklog";
     }
 
 }
+
